@@ -90,6 +90,6 @@ The flisochar_wf.nf worflow supports the maxikraken2 dabase if you want use it t
 
 ### Flisochar_wf Ouput
 Flisochar_wf ouputs seven directories refecting the worklow's features.
-(1) amrfinder  (2) ani_out  (3) annotation  (4) assemblies  (5) quality_control  (6) quast_out  (7) species-identification
+(1) amrfinder,(2) ani_out, (3) annotation, (4) assemblies, (5) quality_control, (6) quast_out, and (7) species-identification
 
 ### Author: Tassy J-S. Bazile
