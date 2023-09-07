@@ -1,0 +1,6 @@
+fasta:
+  class: File
+  location: JBI20000547.fasta
+submol:
+  class: File
+  location: submol.yaml
