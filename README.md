@@ -1,9 +1,8 @@
 # flisochar_wf
 A New web-deployed workflow of FLISOCHAR that supports both ONT and PacBio long reads
 
-FLISOCHAR [here](https://github.com/BPHL-Molecular/flisochar) is a Florida BPHL Pipeline to genomically characterize bacterial isolates using a hybrid assembly method.
+[FLISOCHAR](https://github.com/BPHL-Molecular/flisochar) is a Florida BPHL Pipeline to genomically characterize bacterial isolates using a hybrid assembly method.
 
-### Author: Tassy J-S. Bazile
 
 # Introduction
 
@@ -25,8 +24,8 @@ The current worflow comprises:
 # Software Tools implemented
 1. Quality control on reads: fastp, [longqc](https://github.com/yfukasawa/LongQC)
 2. Three genome assemblers: canu, dragonflye, unicycler (run only canu and unicycler with pacbio long reads)
-3. Taxonomic classification progams: [Kaiju](https://github.com/bioinformatics-centre/kaiju). This version only emplements  Kraken and Mash.
-4. Genome annotators: bakta, pgap, prokka (bakta is omitted in the version)
+3. Taxonomic classification progams: [Kaiju](https://github.com/bioinformatics-centre/kaiju). This version only emplements Kraken and Mash.
+4. Genome annotators: bakta, pgap, prokka (bakta is omitted in this version)
 5. Antimicrobial resistance genes marker: AMRFinderPlus
 6. Average nucleotide identity (ANI): pyANI(pgap)
 
@@ -86,8 +85,11 @@ Run the pipeline on the test dataset in your working directory using the followi
 ```
 nextflow run flisochar_wf.nf --lr_type pcb --lreads 'LRdata/*.fastq.gz' --sreads 'SRdata/*_{1,2}.fastq.gz' --asb_tool canu --genomeSize 3.5m --outdir flisochar_test01
 ```
-### Kraken Maxi database
-The worflow supports kraken maxidabase if you want to maximize Kraken percentage. However, users outside of the cluster HPG need to download krakenmaxi database [here](https://lomanlab.github.io/mockcommunity/mc_databases.html)
-You will provide the path(where up dowloaded DB) and the name within the path (--kradb "/YOUR_PATH/kraken_databases"  --krdbName "maxikraken2_1903_140GB" ) when use the maxidatabase.
+### Maxikraken2 Database
+The flisochar_wf.nf worflow supports the maxikraken2 dabase if you want use it to maximize Kraken percentages. However, users outside of the cluster HPG need to download maxikraken2 database from [here](https://lomanlab.github.io/mockcommunity/mc_databases.html). You will provide the path(where you downloaded the DB) and the name within the path (--kradb "/YOUR_PATH/kraken_databases"  --krdbName "maxikraken2_1903_140GB" ) when use the maxikraken2 database.
 
-### Author: Tassy J. Bazile
+### Flisochar_wf Ouput
+Flisochar_wf ouputs seven directories refecting the worklow's features.
+(1) amrfinder  (2) ani_out  (3) annotation  (4) assemblies  (5) quality_control  (6) quast_out  (7) species-identification
+
+### Author: Tassy J-S. Bazile
