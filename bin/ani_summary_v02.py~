@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+# ani_summary_v01.py
+
+#sys.path.append('/usr/sammy/') to get appen the path of a module
+import os
+import pandas as pd
+import numpy as np
+import re
+import argparse
+#import xlsxwriter 
+"""
+Business Logic:
+This script parses through the output of ani report for species identication into csv and txt files
+ANI compares the input genome sequence to the genomes of the type strains in GenBank
+Usage:
+python ani_summary_v01.py --aniReppath
+
+"""
+# Creating command line arguments to run the module
+parser = argparse.ArgumentParser(prog = 'ani_summary_v01.py [Options]')
+parser.add_argument('--aniReppath', type=str,help= 'paste path to mash top 10 report file', required=True)
+
+args = parser.parse_args()
+aniReport_path = args.aniReppath
+
+# Parsing ani report
+def ani_report(path_to_file,s):
+    # Opening ani raw report
+    with open(path_to_file, 'r') as aniReport: all_lines = aniReport.readlines() # open each related file in midas output
+    lines = [line.strip('\n') for line in all_lines]
+    lines = [line.strip('[]') for line in lines]
+    firstline = lines[1] # skip the header or lines[0]
+    lin_parse = firstline.split(' ') # split tab ->list of columns produced
+    organism_subm = lin_parse[2]
+    organism_pred = ' '.join(lines[2].split(' ')[2:4])
+    organism_type = lines[3].split(' ')[4] 
+    organism_status = lines[4].split(' ')[1] 
+    organism_confid = lines[5].split(' ')[1]
+    line6 = lines[6].split(' ') # ['81.757', '(', '7.1', '', '5.8)', '', '7992118', 'assembly', '', '', '164822', 'Gulosibacter', 'macacae', '(GCA_003865375.1,', 'ASM386537v1)']
+    orgPerc_identity = line6[0]
+    line6 = [i for i in line6 if i] # Remove ampty string
+    line6 = [ x for x in line6  if x!='(' ] # remove '(' if it exists
+    organism_match = ' '.join(line6[6:8])
+    
+    dict_rep = {"Sample_ID":s, "Submitted_organism":organism_subm, "Predicted_organism":organism_pred, "Organism_type":organism_type , "Organism_status":organism_status, "Confidence-level":organism_confid, "%Identity":orgPerc_identity,  "Closest_organism":organism_match}
+    return dict_rep
+
+# Adding Dictionary to df
+def report_to_df(dict_rep):
+
+    df_rep = pd.DataFrame(list(dict_rep.items())) # creating df from dictionary
+    df_repT =  df_rep.transpose()
+    header_row = df_repT.iloc[0] # converting row into column header
+    df_rep2 = pd.DataFrame(df_repT.values[1:], columns =  header_row)
+    return df_rep2  
+        
+# Sending dataframe to csv, txt, xls files 
+def df_to_csv(df_rep2):
+    df_rep2.to_csv('ani_report_tab.csv')
+    df_rep2.to_csv('ani_report_tab.txt', index=None, sep='\t')
+    with pd.ExcelWriter('pgap_ani_report.xlsx', engine='xlsxwriter') as writer: # writer is to add more than one sheet in the workbook
+        df_rep2.to_excel(writer, sheet_name='ANI_Report', startrow=1)
+    return
+
+# Creating a main function, testing the module
+def main():
+    rep_list = os.listdir(aniReport_path)
+    sampList = [repka.split('_')[0] for repka in rep_list]
+    sampList.sort()  
+    cfi = []
+    sp_co =[]
+    df_list = []
+    for s in sampList:
+        saved_path = aniReport_path + s + '_taxCheck'
+        rep_file = 'ani-tax-report.txt'
+        path_to_file = os.path.join(saved_path, rep_file)
+        dict_rep = ani_report(path_to_file,s) # function 1 store report in a dictionary
+        df_rep = report_to_df(dict_rep) # # creates a df from the each dictionary 
+        df_list.append(df_rep) # adding all dfs to a list
+        rep_dfn = pd.concat(df_list) # group dfs into a single one
+        rep_dfn.index = np.arange(1, len(rep_dfn) + 1) # Make index start from1
+    df_to_csv(rep_dfn) # Function 3 creates text files
+    print(rep_dfn)
+# Managing how the program will run (whether as a module or standalone)
+if __name__ == "__main__":
+    main()
