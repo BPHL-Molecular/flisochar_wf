@@ -1,5 +1,5 @@
 # flisochar_wf
-A New web-deployed workflow of FLISOCHAR that supports both ONT and PacBio long reads
+A new web-deployed workflow of FLISOCHAR that supports both ONT and PacBio long reads
 
 [FLISOCHAR](https://github.com/BPHL-Molecular/flisochar) is a Florida BPHL Pipeline to genomically characterize bacterial isolates using a hybrid assembly method.
 
