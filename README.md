@@ -85,8 +85,10 @@ Run the pipeline on the test dataset in your working directory using the followi
 ```
 nextflow run flisochar_wf.nf --lr_type pcb --lreads 'LRdata/*.fastq.gz' --sreads 'SRdata/*_{1,2}.fastq.gz' --asb_tool canu --genomeSize 3.5m --outdir flisochar_test01
 ```
+#### Running with ONT data
+You may find ONT from the [flisochar](https://github.com/BPHL-Molecular/flisochar) page.
 ### Maxikraken2 Database
-The flisochar_wf.nf worflow supports the maxikraken2 dabase if you want use it to maximize Kraken percentages. However, users outside of the cluster HPG need to download maxikraken2 database from [here](https://lomanlab.github.io/mockcommunity/mc_databases.html). You will provide the path(where you downloaded the DB) and the name within the path (--kradb "/YOUR_PATH/kraken_databases"  --krdbName "maxikraken2_1903_140GB" ) when use the maxikraken2 database.
+The flisochar_wf.nf worflow supports the maxikraken2 dabase if you want to use it to maximize Kraken percentages. However, users outside of the cluster HPG need to download maxikraken2 database from [here](https://lomanlab.github.io/mockcommunity/mc_databases.html). You will provide the path(where you downloaded the DB) and the name within the path (--kradb "/YOUR_PATH/kraken_databases"  --krdbName "maxikraken2_1903_140GB" ) when use the maxikraken2 database.
 
 ### Flisochar_wf Ouput
 Flisochar_wf ouputs seven directories refecting the worklow's features.
